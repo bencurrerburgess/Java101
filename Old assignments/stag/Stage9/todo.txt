@@ -1,0 +1,3 @@
+- Check commands are valid
+- Allow noun phrases for things, e.g. 'take red key'
+- What if the player must carry multiple things to solve a puzzle? 

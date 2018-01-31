@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<title>Assignment: Oxo</title>
+<style>
+.indent { margin-left: 40px; }
+</style>
+</head>
+<body>
+
+<h1>Assignment: Oxo</h1>
+
+<p>This assignment <strong>counts for 20%</strong> of the assessment for the
+unit.  The main aim in this assignment is to create a multi-class program, to
+practice design, classes, objects, libraries, unit testing, and style.</p>
+
+<h2>The program</h2>
+
+<p>The idea is to write a program called <kbd>Oxo.java</kbd> which allows two
+people to play the
+game <a href="http://en.wikipedia.org/wiki/Noughts_and_crosses">Noughts and
+Crosses</a> (or Tic-Tac-Toe if you are American) using just text.  It would be
+reasonably easy to write this program in one piece, but you are asked to
+deliberately over-engineer it, as if it were a bigger project, to show off your
+object oriented skills.  Here are some suggested classes:</p>
+
+<ul>
+
+<li><p>A <code>Board</code> class, to represent the current state of the game,
+i.e. a 3x3 grid, plus which player's turn it is to move next.  It should
+probably also be responsible for checking whether moves are valid or not,
+whether a player has just won or not, or whether the game is a draw.  This is the main logic of the game, so this class needs unit testing.</p></li>
+
+<li><p>A <code>Position</code> class to represent a position on the 3x3 playing
+board.</p></li>
+
+<li><p>An enumerated type class, or some other way to represent the possible
+values that can appear on the board (an X, an O, or blank) in a symbolic
+way.</p></li>
+
+<li><p>A <code>Display</code> class, which deals with printing out the board as
+text, and with receiving inputs from the players</p></li>
+
+<li><p>An <code>Oxo</code> class which controls everything</p></li>
+
+</ul>
+
+<p>A board might be printed out like this (or something similar which indicates
+row letters and column numbers):</p>
+
+<pre>    123
+
+a   OX.
+b   ..X
+c   ...
+</pre>
+
+<p>The two players might use the same keyboard to type in moves:</p>
+
+<pre>Player O's move: <strong>b2</strong>
+</pre>
+
+<p>Some things you might like to know, and which might be helpful, are:</p>
+
+<ul>
+
+<li><p>You can use <code>System.out.print</code> to print out text without a
+newline, e.g. as a prompt</p></li>
+
+<li><p>You can put <code>import java.util.*;</code> at the top of your program
+to import a helpful collection of utility classes, and/or <code>import
+java.io.*;</code> for input/output classes</p></li>
+
+<li><p>Either the <code>Scanner</code> or <code>Console</code> class can be
+used to help with reading lines of text from the user</p></li>
+
+</ul>
+
+<h2>Assessment</h2>
+
+<p>Some things which I am looking for are: good design (probably along the
+lines I have suggested, but in any case with "the right code in the right
+place"), good style (DRY, consistent, commented but not over-commented code),
+no statics (except for <code>main</code> methods), private fields (except maybe
+for immutable objects), defensive programming (i.e. testing for bad things even
+though they shouldn't happen, to improve debugging), unit testing (to convince
+me that your classes do what they should), robustness (to convince me that your
+classes don't do what they shouldn't).</p>
+
+<p>Bearing in mind that the official allowance for the assignment is only 5
+hours, you have plenty to do, and doing it well will probably get you a mark in
+the 60-70 range.  But if you are clever, or quick, or bored, or want extra
+marks, you could try one of these extensions.  Implement an interesting variant
+of the game.  Add graphics.  Add networking to play on two different computers.
+Add an AI component, so a human can play against the computer.</p>
+
+<h2>Submission</h2>
+
+<p>Just submit your <code>.java</code> files (I expect to be able to compile
+them).  Add
+a <code>readme.txt</code>/<code>readme.md</code>/<code>readme.pdf</code> file
+if there is anything about your program which isn't immediately obvious or you
+have other comments to make.  (Don't submit proprietary formats like doc, docx,
+rar, but zip is OK if you need it.)</p>
+
+<p>(<b>ZIP ON WINDOWS:</b> the built-in zip/unzip in Windows has at least two
+problems.  First, it can't cope with long names. Whether this is long filenames
+or long overall pathnames, I am not sure.  Second, on 'professional' versions
+of Windows which support encrypted filestores, Windows uses a bit in the zip
+file to indicate whether the files are encrypted or not.  Unfortunately, it is
+a bit which means something different on all other systems, so zip files end up
+not being portable in either direction between systems.  It is very strongly
+recommended that you download and install http://www.7-zip.org/ or something
+similar and use it for all zip/unzip operations.)</p>
+
+</body>
+</html>

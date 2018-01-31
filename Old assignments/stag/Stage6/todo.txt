@@ -1,0 +1,7 @@
+- Review whether a place should be doing any printing
+- Check that two exits from one place never have the same name
+- Maybe exits() should check that it is not called twice
+- Check commands are valid
+- Keep names of things globally unique, because they might end up together
+- Allow noun phrases for things, e.g. 'take red key'
+- Give immediate feedback for take and drop

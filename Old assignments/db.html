@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<title>Assignment: DB</title>
+<style type='text/css'>
+pre, .indent { margin-left:40px; }
+</style>
+</head>
+<body>
+
+<h1>Assignment: DB</h1>
+
+<p>This assignment counts for 40% of the unit, and there are three weeks to do
+it in.</p>
+
+<p>The main aim of the assignment is to gain experience of incremental
+development, including refactoring as well as unit testing.  As well as your
+program, you should submit a report which describes the stages of development,
+the design decisions you made, any refactoring you had to do, and any
+particularly interesting issues that arose during implementation.  In order to
+explain your progress, you might want to include zipped up copies of your code
+at each stage of development.  In fact, if you want, you can submit each stage
+with its own mini report as you complete it.</p>
+
+<p>This description deliberately describes more stages of development than you
+are likely to be able to carry out.  And later stages are deliberately
+described with less and less detail, to allow for you to go in your own chosen
+direction.  There is no one "correct" or "best" design here - there is a huge
+number of possibilites (though, of course, some designs are better than
+others).</p>
+
+<p>It is important that you finish some well-polished and robust stages that
+you feel proud of, rather than racing ahead to try to get as many done as
+possible in a very rough way.  And try to increase the breadth of your
+experience a bit, maybe practicing things that have been mentioned in feedback
+from previous assignments, or trying out new tools and techniques.</p>
+
+<h2>The idea</h2>
+
+<p>The idea is to design and implement a home-made database system.  Some
+suggestions will be given for the first few stages of development, and then
+after that, a number of extensions will be outlined for the adventurous.  I
+suggest not even reading about a stage until you have finished the previous
+ones, so that each stage comes as a change of requirements.  As you finish each
+stage, you might want to keep a snapshot of it, to make it easier to produce a
+report at the end.</p>
+
+<p>Please don't try to do everything - just work steadily, make sure each stage
+is clean and robust, and stop when you run out of time.</p>
+
+<h2>Records</h2>
+
+<p>The first suggested stage is to sort out how to store
+individual <dfn>records</dfn>, also called <dfn>rows</dfn> or <dfn>tuples</dfn>
+or <dfn>objects</dfn>.  A record contains named <dfn>fields</dfn>, also
+called <dfn>entries</dfn> or <dfn>values</dfn> or <dfn>cells</dfn>
+or <dfn>items</dfn>.  For example, suppose you have a table of animals and a
+table of people like this:</p>
+
+<table style="float:left" class="indent"><tbody>
+<tr><th>Id</th><th>Name</th><th>Kind</th><th>Owner</th></tr>
+<tr><td>1</td><td>Fido</td><td>dog</td><td>ab123</td></tr>
+<tr><td>2</td><td>Wanda</td><td>fish</td><td>ef789</td></tr>
+<tr><td>3</td><td>Garfield</td><td>cat</td><td>ab123</td></tr>
+</tbody></table>
+
+<table style="float:left" class="indent"><tbody>
+<tr><th>Username</th><th>Name</th></tr>
+<tr><td>ab123</td><td>Jo</td></tr>
+<tr><td>cd456</td><td>Sam</td></tr>
+<tr><td>ef789</td><td>Amy</td></tr>
+<tr><td>gh012</td><td>Pete</td></tr>
+</tbody></table>
+
+<p style="clear:both">The first contains three records and the second contains
+four.  The animals table has fields called "id", "Name", "Kind", "Owner".  The
+people table has fields "Username", "Name".</p>
+
+<p>The idea behind this stage of development is that you develop a single
+general-purpose class called <code>Record</code> (or whatever you want) which
+will hold any type of record, no matter what table it is from, as a collection
+of fields which are strings. The operations on a record object are, perhaps, to
+find out how many strings it has, and to get or set individual strings.</p>
+
+<p>I would suggest that you ignore the field names for now, and just store the
+string values in a specific order.  In other words, a record is hardly any more
+than an array of strings. The <code>Record</code> class is just a place to
+gather code later as development continues.  Alternatively, you could store the
+field names in a record, but with a view to sharing them between all the
+records of one table later, so you don;t store the same data multiple
+times.</p>
+
+<h2>Tables</h2>
+
+<p>The second stage is to deal with <dfn>tables</dfn>, also
+called <dfn>relations</dfn> or <dfn>types</dfn>.  A table is a collection of
+records, all having the same number of fields, in the same order, with the same
+names.</p>
+
+<p>Again, the aim is to design a single general-purpose class,
+say <code>Table</code>, to hold any table.  At this point, you may want a table
+object to hold the field names, rather than repeating them in every record
+object.  In that case, the fields are often called <dfn>columns</dfn>
+or <dfn>attributes</dfn> or <dfn>properties</dfn>.</p>
+
+<p>Common operations on a table which you might want to make convenient or
+efficient are to <em>select</em> a record (perhaps by row
+number), <em>insert</em> a record, <em>delete</em> a record, or <em>update</em>
+a record.  You might also give a little thought to doing these operations on
+multiple records at the same time.</p>
+
+<p>Less frequent operations, which don't need to be so convenient or efficient,
+might be to <em>create</em> a table with given column names, or <em>alter</em>
+a table, e.g. by adding an extra column.</p>
+
+<p>Depending on your approach and attitude, you may find a potential problem at
+this point, because it seems that a table needs to know about the records in
+it, and a record seems to need to know what table it is in (so that it knows
+what field names it has).  There are several ways to resolve this issue.</p>
+
+<h2>Files</h2>
+
+<p>In this stage, the data for each table can be stored in its own file.  The
+file holds (say) a first line which acts as a header of column names, and one
+line for each records.  You might want to use readable text files.  In that
+case, you might use an ordinary character such as a comma between fields, and a
+newline as a record terminator.  But then you need some mechanism to allow
+commas and newlines in field values.  Alternatively, you could use a format
+where suitable control characters are used to separate fields and terminate
+records, while insisting that only readable non-control characters are allowed
+in fields.</p>
+
+<p>The record and table classes now have to be adapted to allow for loading up
+their data from files, and writing their data back to files.  You may want to
+assume, at this stage, that writing back to files is done just once when the
+overall driving program shuts down, rather than bit by bit as changes are
+made.</p>
+
+<p>There are alternative file storage possibilites that you might want to
+investigate either now, or as a later stage of development.</p>
+
+<h2>Printing</h2>
+
+<p>At this stage, there should be a way to print out a table neatly, preferably
+with the columns lining up.</p>
+
+<h2>Keys</h2>
+
+<p>A key is a unique identifier of some sort for each record of a table.
+Either the key can be something separate, or it can simply be assumed to be the
+first field and handled more-or-less the same as the other fields (either
+approach can work well).  Also, the key can be automatically generated, or the
+user might be responsible for it in the same way as any other field (either
+approach works).</p>
+
+<p>Changes to the classes already developed might include making sure that keys
+are unique, i.e. that there can't be two records with the same key in the same
+table.  Some thought, and possibly refactoring, may be required to find the
+best way to guarantee this kind of consistency property.</p>
+
+<p>Keys can now be used to provide a more stable way of referring to records,
+rather than using row numbers - the row number of a record changes as other
+records are inserted or deleted, but the key doesn't change.  So, in the
+animals and people example above, the "Owner" field in an animal record holds
+the key (username) of its owner.</p>
+
+<h2>Databases</h2>
+
+<p>A database is a collection of related tables, each with its own name.  What
+is needed is some way of wrapping up this idea, perhaps with a database class
+and some conventions for a database folder.</p>
+
+<h2>Extensions</h2>
+
+<p>The stages described from this point on are extensions.  Please feel free to
+stop at this point, or to choose which extensions you want to concentrate on,
+or to change their order, or to go in a completely different direction of your
+own.</p>
+
+<h2>Types</h2>
+
+<p>Each column in a table can be given a type.  Values can still be stored as
+strings, but the type controls what strings are allowed and how they are
+handled.  Alternatively, values of different types can be stored in different
+ways, but wrapped so as to make fields of different types compatible.</p>
+
+<p>As an example, a column of type <code>integer</code> might restrict strings
+in fields to digits, and cause printing to be done with right-alignment.
+Another possibility is a tag type, where each field can only hold one of a
+short enumerated list of values.  Most importantly, a reference type is needed,
+representing a "foreign key" field, i.e. a field which refers to a record in
+another table by its key.</p>
+
+<h2>Constraints</h2>
+
+<p>Once you have foreign key fields, there is the question of how you make sure
+that such fields always refer to other records which actually exist.
+Automatically checked constriants are one of the strengths of database
+systems.</p>
+
+<h2>Catalogs</h2>
+
+<p>Some mechanism might be needed to access meta-information about a database,
+such as a list of tables, the types of their columns, and so on, and some way
+of querying this information perhaps in the same way as querying ordinary
+records.</p>
+
+<h2>Query language</h2>
+
+<p>A textual language could be added for querying a database.  The SQL language
+is standard, but dreadful, for a variety of reasons.  You might prefer to try
+implementing some cleaner, after reading this:</p>
+
+<p class="indent"><a href="/software/sql/">SQL notes</a></p>
+
+<h2>Transactions</h2>
+
+<p>A transaction is a series of queries treated as an atomic unit, i.e. if
+anything goes wrong, the database is kept in or restored to the same state as
+before the queries were started.</p>
+
+<h2>Journals</h2>
+
+<p>A journal is one way in which changes to the data can be stored as you go
+along, in a way which is very robust.  If the program or computer crashes, the
+database can be restored to a safe, consistent and recent state.</p>
+
+<h2>User Interface</h2>
+
+<p>A full textual user interface, or even a graphical one, could be added.</p>
+
+</body>
+</html>

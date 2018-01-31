@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<title>Assignment: Stag</title>
+<style type='text/css'>
+pre, .indent { margin-left:40px; }
+</style>
+</head>
+<body>
+
+<h1>Assignment: Stag</h1>
+
+<p>This assigment has zero weight.  The aims are:</p>
+
+<ul>
+
+<li>to practice multi-class Java programs</li>
+
+<li>to get used to using objects as components</li>
+
+<li>to experience a free and open-ended design space</li>
+
+</ul>
+
+<p>You have three options.  One is to follow the ideas below and from the Stag
+lecture notes quite closely, so that you understand them better.  The second is
+to do something similar, but following your own design path, taking different
+decisions about what an adventure game should do and how it should be designed.
+The third is to write some other program entirely which you think will help you
+to practice object oriented thinking - maybe a reconstruction of a retro game
+such as <a href="https://en.wikipedia.org/wiki/Hangman_(game)">hangman</a> or
+<a href="https://en.wikipedia.org/wiki/Connect_Four">connect4</a>
+or <a href="https://en.wikipedia.org/wiki/Mastermind_(board_game)">mastermind</a>.</p>
+
+<p>The Stag idea is to implement a Simple Text Adventure Game.  A tiny game of
+this kind might go like this, where the player types the bold text:</p>
+
+<pre>You are stranded on a tiny desert island with a single palm tree.
+You are near a tree. South is a beach. There is a spade here.
+&gt; <b>go south</b>
+You are on a beach. North is a tree. There is sand here.
+&gt; <b>dig sand</b>
+You don't have a spade.
+&gt; <b>go north</b>
+You are near a tree. South is a beach. There is a spade here.
+&gt; <b>take spade</b>
+You are carrying a spade.
+&gt; <b>go south</b>
+You are on a beach. North is a tree. There is sand here.
+&gt; <b>dig sand</b>
+You find your holiday return ticket and go home.
+</pre>
+
+<p>Thre are different design approaches you can take.</p>
+
+<p>At one extreme in game design is the approach in the Zuul project in the
+book <a href="http://www.bluej.org/objects-first/">Objects First with Java</a>.
+It has a class <code>GameObject</code>, with
+subclasses <code>Room</code>, <code>Item</code>, <code>Player</code>,
+<code>Person</code> and so on.  Note that 'room' is a common name for any kind
+of <em>place</em> in an adventure game.  This approach tends to lead to all the
+complexity being in the code.  Most of the code I have seen in this style seems
+to be of the old-fashioned over-verbose kind.</p>
+
+<p>At the other extreme is my
+own <a href="https://www.cs.bris.ac.uk/Teaching/Resources/COMS20805/lectures/stage.pdf">Stage</a>
+approach.  There is only one game object type, <code>Entity</code>, including
+places and items etc.  Different types of entity are recognised by what is
+attached to them.  There is a custom scripting language with a small
+interpreter.  The end result is that most of the complexity is in the data.</p>
+
+<p>The approach in the Stag lecture notes is somewhere in the middle.  There
+are enough other possibilities for everyone to produce something different.
+Here are some suggestions.</p>
+
+<h2>Overall approach</h2>
+
+<p>Invent a small game with just one or two puzzle types, and make it your
+target to implement that game.</p>
+
+<p>Unless you are particularly interested in scripting languages and
+interpreters, I suggest you fix the language (English) and have a fixed set of
+verbs built into the code.  Fix the style of the game, particularly the types
+of puzzles. You could, for example, have one class for each puzzle type that
+you want to support.</p>
+
+<p>On the other hand, put all the places, items, wiring, response text and
+puzzle details into the data.  Aim for your code to be general enough to
+support similar games in the same style just by changing the data.</p>
+
+<h2>Commands</h2>
+
+<p>Unless you have a particular personal interest in natural language
+processing or simple artificial intelligence, I suggest using just plain
+verb-noun commands such as:</p>
+
+<pre>&gt; open door
+</pre>
+
+<p>It is reasonable to say that each verb has to be a single word, but a noun
+can be a phrase, e.g.</p>
+
+<pre>&gt; open red door
+</pre>
+
+<p>Instead of recognising complex commands such as "open door with key", just
+arrange things so that "open door" works if the player is carrying the right
+key, and not otherwise.  Somehow, the data needs to contain information about
+how to solve the puzzles.</p>
+
+<p>Depending on the style of game, it may not seem fair to make the player
+guess words out of thin air.  In that case, it might be a good idea for the
+player to be able to ask for all the available nouns and verbs, or all the ones
+that are currently relevant</p>
+
+<h2>Places</h2>
+
+<p>Among other things, a place has a number of named exits to other places.  If
+directions are used, then the exit names need to belong somehow to the place
+you are coming from.  For example, suppose there is a place "crossroads", an
+exit called "south" from the village to the crossroads, and an exit called
+"north" from the town to the crossroads.  Obviously, in some sense, the word
+"south" must belong to the village, and "north" to the town - there are many
+directions from which to approach the crossroads.</p>
+
+<p>An alternative, if you want the name of a place to be held in the place
+itself, is to use actual place names instead of directions.  For example:</p>
+
+<pre>You are near a tree.
+You can see a spade here.
+You can see a beach in the distance.
+&gt; go beach
+</pre>
+
+<p>Each approach has its pros and cons.</p>
+
+<h2>Things</h2>
+
+<p>These games almost always have things which the player finds, carries
+around, perhaps combines, and then uses to solve puzzles.</p>
+
+<p>There are at least two ways to arrange for things to be carried around.  One
+is to have an explicit player or bag object which the things being carried are
+attached to.  Another is for the things being carried to be stored in the
+current place, along with other things which happen to be there.  The things
+being carried are distinguishable in some way and are moved from place to place
+as the player moves.  An advantage of this second approach is that you never
+have to look in two places for things (e.g. in the previous approach, you have
+to look in one place for "take x" and in another for "drop x").</p>
+
+<h2>Classes</h2>
+
+<p>I suggest you start "in the middle" by writing classes which represent
+places and things, then gradually widen the scope by adding control, user
+interaction, a data file format, or whatever you want.</p>
+
+<h2>Extensions</h2>
+
+<p>There are plenty of directions in which you might want to take this.  You
+can use libraries, add interesting puzzle types, improve the user interface,
+make the code more generic, add a saved game feature, add images, or whatever
+you want.</p>
+
+<p>Just submit the Java source files of the classes you write, and a short
+report (preferably in plain text or PDF or polyglot HTML5 format).  The report
+need not be long or sophisticated - it should just explain what you spent the
+bulk of your time on, and what features you are most proud of.</p>
+
+<p>The highest marks will go to those who use Java in the best way, with a
+"sweet" and "simple" design, where the code has good value for money.</p>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+- Review whether a place should be doing any printing
+- Check that two exits from one place never have the same name

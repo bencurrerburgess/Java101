@@ -1,0 +1,4 @@
+- Review whether a place should be doing any printing
+- Check that two exits from one place never have the same name
+- Maybe exits() should check that it is not called twice
+- Use a better data structure for exits, to avoid the search loop

@@ -1,0 +1,6 @@
+- Check that place names stay local, i.e. two places can have the same name
+- Maybe exits() should check that it is not called twice
+- Check commands are valid
+- Keep names of things globally unique, because they might end up together
+- Allow noun phrases for things, e.g. 'take red key'
+- Sort out the code for executing commands
